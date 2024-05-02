@@ -1,4 +1,4 @@
-import { ContentCard } from '@vkontakte/vkui'
+import { ContentCard, PanelSpinner } from '@vkontakte/vkui'
 import { FC } from 'react'
 import { timeTransform } from '../features'
 import { useGetItemQuery } from '../shared/api/hackerNews.api'
@@ -15,6 +15,10 @@ export const Comment: FC<ICommentProps> = ({ id }) => {
 
 	function render(comment: string) {
 		return <div dangerouslySetInnerHTML={{ __html: comment }} />
+	}
+
+	if (!data) {
+		return <PanelSpinner size='large'>Loading...</PanelSpinner>
 	}
 
 	return (

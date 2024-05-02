@@ -17,6 +17,10 @@ export const NewsItem: FC<INewsItemProps> = ({ id }) => {
 	const dispatch = useAppDispatch()
 	const date = timeTransform(data?.time || null)
 
+	if (!data) {
+		return
+	}
+
 	return (
 		<ContentCard
 			onClick={() => {
