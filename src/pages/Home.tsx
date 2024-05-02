@@ -1,39 +1,46 @@
-import { UserInfo } from '@vkontakte/vk-bridge'
-import { useRouteNavigator } from '@vkontakte/vk-mini-apps-router'
+import { Icon24RefreshOutline, Icon28RefreshOutline } from '@vkontakte/icons'
 import {
-	Button,
-	Div,
-	Group,
-	Header,
+	AdaptiveIconRenderer,
 	NavIdProps,
 	Panel,
 	PanelHeader,
+	PanelHeaderButton,
+	PanelSpinner,
 } from '@vkontakte/vkui'
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
+import { hackerNewsApi } from '../shared/api/hackerNews.api'
+import { NewsList } from '../widgets'
 
-export interface HomeProps extends NavIdProps {
-	fetchedUser?: UserInfo
-}
-
-export const Home: FC<HomeProps> = ({ id }) => {
-	const routeNavigator = useRouteNavigator()
-
+export const Home: FC<NavIdProps> = ({ id }) => {
+	const { refetch } =
+		hackerNewsApi.endpoints.getNewsList.useQuerySubscription(null)
+	const { isLoading, data } =
+		hackerNewsApi.endpoints.getNewsList.useQueryState(null)
+	const newsList = data?.slice(0, 100) || []
+	useEffect(() => {
+		const timerID = setInterval(() => refetch(), 60000)
+		return () => clearInterval(timerID)
+	})
 	return (
 		<Panel id={id}>
-			<PanelHeader>Hacker News</PanelHeader>
+			<PanelHeader
+				before={
+					<PanelHeaderButton onClick={refetch}>
+						<AdaptiveIconRenderer
+							IconCompact={Icon24RefreshOutline}
+							IconRegular={Icon28RefreshOutline}
+						/>
+					</PanelHeaderButton>
+				}
+			>
+				Hacker News
+			</PanelHeader>
 
-			<Group header={<Header mode='secondary'>Navigation Example</Header>}>
-				<Div>
-					<Button
-						stretched
-						size='l'
-						mode='secondary'
-						onClick={() => routeNavigator.push('news_page')}
-					>
-						Покажите Персика, пожалуйста!
-					</Button>
-				</Div>
-			</Group>
+			{isLoading ? (
+				<PanelSpinner size='large'>Loading...</PanelSpinner>
+			) : (
+				<NewsList newsList={newsList} />
+			)}
 		</Panel>
 	)
 }

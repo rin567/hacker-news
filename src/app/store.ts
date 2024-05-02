@@ -1,11 +1,16 @@
 import { configureStore } from '@reduxjs/toolkit'
-// ...
+import { hackerNewsApi } from '../shared/api/hackerNews.api'
+import selectedNewsReducer from './selectedNewsSlice'
 
 export const store = configureStore({
-	reducer: {},
+	reducer: {
+		[hackerNewsApi.reducerPath]: hackerNewsApi.reducer,
+		selectedNews: selectedNewsReducer,
+	},
+	middleware: getDefaultMiddleware =>
+		getDefaultMiddleware().concat(hackerNewsApi.middleware),
 })
 
-// Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>
-// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
+
 export type AppDispatch = typeof store.dispatch

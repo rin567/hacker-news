@@ -6,6 +6,8 @@ import {
 	PanelHeaderBack,
 } from '@vkontakte/vkui'
 import { FC } from 'react'
+import { NewsItemDetails } from '../entities'
+import { CommentsList } from '../widgets'
 
 export const News: FC<NavIdProps> = ({ id }) => {
 	const routeNavigator = useRouteNavigator()
@@ -15,8 +17,10 @@ export const News: FC<NavIdProps> = ({ id }) => {
 			<PanelHeader
 				before={<PanelHeaderBack onClick={() => routeNavigator.back()} />}
 			>
-				Persik
+				Hacker News
 			</PanelHeader>
+			<NewsItemDetails></NewsItemDetails>
+			<CommentsList></CommentsList>
 		</Panel>
 	)
 }
