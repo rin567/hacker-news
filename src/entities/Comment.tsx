@@ -21,6 +21,10 @@ export const Comment: FC<ICommentProps> = ({ id }) => {
 		return <PanelSpinner size='large'>Loading...</PanelSpinner>
 	}
 
+	if (data?.deleted) {
+		return <ContentCard text='< comment deleted >' subtitle={`${date}`} />
+	}
+
 	return (
 		<ContentCard
 			text={render(String(comment))}
